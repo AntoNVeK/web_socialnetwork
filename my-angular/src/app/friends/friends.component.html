@@ -1,0 +1,34 @@
+<div class="friends-page" *ngIf="!isLoading; else loading">
+  <div class="friends-header">
+    <h2>Мои друзья</h2>
+    <button mat-raised-button color="accent" (click)="goToHome()">
+      <mat-icon>home</mat-icon>
+      На главную
+    </button>
+  </div>
+
+  <div *ngIf="friends.length; else noFriends">
+    <div class="friends-grid">
+      <app-user-card
+        *ngFor="let friend of friends"
+        [user]="friend"
+        [currentUserId]="currentUserId"
+        [isFriend]="true"
+        mode="friends"
+        (removeFriend)="onRemoveFriend($event)"
+        (writeMessage)="onWriteMessage($event)"
+      ></app-user-card>
+    </div>
+  </div>
+
+  <ng-template #noFriends>
+    <p class="no-friends-text">У вас пока нет друзей 😢</p>
+  </ng-template>
+</div>
+
+<ng-template #loading>
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Загрузка друзей...</p>
+  </div>
+</ng-template>

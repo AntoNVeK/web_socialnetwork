@@ -1,0 +1,43 @@
+<div class="main-container">
+  <div class="welcome-section">
+    <h1>Добро пожаловать!</h1>
+    <p>Вы вошли как {{ userService.getFullName() }}</p>
+  </div>
+
+  <div class="navigation-grid">
+    <!-- Пользователи -->
+    <button mat-raised-button color="primary" class="nav-button" (click)="goToUsers()">
+      <mat-icon>people</mat-icon>
+      <span>Пользователи</span>
+    </button>
+
+    <!-- Друзья -->
+    <button mat-raised-button color="primary" class="nav-button" (click)="goToFriends()">
+      <mat-icon>group</mat-icon>
+      <span>Друзья</span>
+    </button>
+
+    <!-- Новости -->
+    <button mat-raised-button color="primary" class="nav-button" (click)="goToNews()">
+      <mat-icon>article</mat-icon>
+      <span>Новости</span>
+    </button>
+
+    <!-- Админка (только для админов) -->
+    <button 
+      *ngIf="isAdmin()" 
+      mat-raised-button 
+      color="accent" 
+      class="nav-button" 
+      (click)="goToAdmin()">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span>В админку</span>
+    </button>
+
+    <!-- Профиль -->
+    <button mat-raised-button color="primary" class="nav-button" (click)="goToProfile()">
+      <mat-icon>person</mat-icon>
+      <span>Профиль</span>
+    </button>
+  </div>
+</div>

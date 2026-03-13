@@ -1,0 +1,38 @@
+.friends-page {
+  padding: 24px;
+  color: #e0e0e0;
+}
+
+.friends-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.friends-header h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.friends-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.no-friends-text {
+  text-align: center;
+  color: #9e9e9e;
+  margin-top: 50px;
+  font-size: 1.1rem;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #9e9e9e;
+  margin-top: 50px;
+}

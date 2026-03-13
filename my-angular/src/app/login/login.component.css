@@ -1,0 +1,126 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #111;
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 450px;
+  padding: 30px;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  color: #fff
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #1a237e;
+  color: #bbdefb;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin: 20px 0;
+  border-left: 4px solid #1976d2;
+}
+
+.valid-icon {
+  color: #4caf50 !important;
+}
+
+/* Улучшенные подсказки */
+mat-hint {
+  font-size: 11px;
+  color: #888;
+}
+
+/* Улучшенные сообщения об ошибках */
+mat-error {
+  font-size: 12px;
+}
+.submit-button {
+  margin-top: 24px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 500;
+  background: linear-gradient(135deg, #b71c1c, #d32f2f);
+  border: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  color: #fff !important;
+}
+
+.submit-button:hover:not([disabled]) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(183, 28, 28, 0.4);
+}
+
+
+
+
+
+/* Анимация появления */
+.login-card {
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+  .login-card {
+    margin: 10px;
+    padding: 20px;
+  }
+  
+  .login-container {
+    padding: 10px;
+  }
+}
+
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0 0 0;
+  margin-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.auth-divider {
+  text-align: center;
+  margin-bottom: 16px;
+  color: #666;
+  font-size: 14px;  
+}
+
+.signin-button {
+  padding: 8px;
+  font-size: 14px;
+}
+
+
+input {
+  color: #fff !important;
+}

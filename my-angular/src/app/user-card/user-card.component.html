@@ -1,0 +1,82 @@
+<mat-card class="user-card" [ngClass]="{ 'current-user': user.id == currentUserId }">
+  <mat-card-header>
+    <div mat-card-avatar class="user-avatar">
+      <img
+        *ngIf="user.photo; else initials"
+        [src]="userService.getPhotoUrl(user.photo)"
+        alt="Фото пользователя"
+      />
+      <ng-template #initials>
+        <span class="avatar-initials">
+          {{ user.firstName[0] }}{{ user.lastName[0] }}
+        </span>
+      </ng-template>
+    </div>
+    <mat-card-title>
+      {{ user.lastName }} {{ user.firstName }} {{ user.middleName || '' }}
+    </mat-card-title>
+    <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="info-line" *ngIf="user.role">
+      <mat-icon color="accent">badge</mat-icon>
+      <span>{{ userUtils.translateRole(user.role) }}</span>
+    </div>
+
+    <div class="info-line" *ngIf="user.status">
+      <mat-icon color="accent">person</mat-icon>
+      <span [ngClass]="userUtils.getStatusClass(user.status)">
+        {{ userUtils.translateStatus(user.status) }}
+      </span>
+    </div>
+
+    <div class="info-line" *ngIf="user.birthDate">
+      <mat-icon color="accent">cake</mat-icon>
+      <span>{{ userService.getFormattedDate(user.birthDate) }}</span>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <!-- Если это текущий пользователь -->
+    <ng-container *ngIf="user.id == currentUserId; else notYou">
+      <mat-chip color="accent" selected>
+        <mat-icon>account_circle</mat-icon>
+        Это вы
+      </mat-chip>
+    </ng-container>
+
+    <ng-template #notYou>
+      <!-- USERS mode -->
+      <ng-container *ngIf="mode === 'users'">
+        <button
+          *ngIf="!isFriend"
+          mat-stroked-button
+          color="primary"
+          (click)="onAddFriend()"
+        >
+          <mat-icon>person_add</mat-icon>
+          Добавить в друзья
+        </button>
+
+        <mat-chip *ngIf="isFriend" color="primary" selected class="friend-chip">
+          <mat-icon>check_circle</mat-icon>
+          В друзьях
+        </mat-chip>
+      </ng-container>
+
+      <!-- FRIENDS mode -->
+      <ng-container *ngIf="mode === 'friends'">
+        <button mat-stroked-button color="accent" (click)="onWriteMessage()">
+          <mat-icon>chat</mat-icon>
+          Написать
+        </button>
+
+        <button mat-stroked-button color="warn" (click)="onRemoveFriend()">
+          <mat-icon>person_remove</mat-icon>
+          Удалить
+        </button>
+      </ng-container>
+    </ng-template>
+  </mat-card-actions>
+</mat-card>

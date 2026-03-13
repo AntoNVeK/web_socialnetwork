@@ -1,0 +1,119 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>Регистрация</mat-card-title>
+      <mat-card-subtitle>Заполните форму для создания аккаунта</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Общие ошибки формы -->
+        <div *ngIf="showFormErrors && loginForm.invalid" class="form-error-message">
+          <mat-icon>error</mat-icon>
+          <span>Исправьте ошибки в форме перед отправкой</span>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">
+          <mat-icon>warning</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <!-- Фамилия -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Фамилия *</mat-label>
+          <input matInput formControlName="lastName" placeholder="Введите фамилию">
+          <mat-icon matSuffix>person</mat-icon>
+          <mat-icon matSuffix *ngIf="lastName?.valid && lastName?.touched" class="valid-icon">check_circle</mat-icon>
+          <mat-error *ngIf="lastName?.invalid && (lastName?.touched || showFormErrors)">
+            {{ getLastNameErrors() }}
+          </mat-error>
+          <mat-hint>Только буквы, пробелы и дефисы</mat-hint>
+        </mat-form-field>
+
+        <!-- Имя -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Имя *</mat-label>
+          <input matInput formControlName="firstName" placeholder="Введите имя">
+          <mat-icon matSuffix>person_outline</mat-icon>
+          <mat-icon matSuffix *ngIf="firstName?.valid && firstName?.touched" class="valid-icon">check_circle</mat-icon>
+          <mat-error *ngIf="firstName?.invalid && (firstName?.touched || showFormErrors)">
+            {{ getFirstNameErrors() }}
+          </mat-error>
+          <mat-hint>Только буквы, пробелы и дефисы</mat-hint>
+        </mat-form-field>
+
+        <!-- Отчество -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Отчество</mat-label>
+          <input matInput formControlName="middleName" placeholder="Введите отчество">
+          <mat-icon matSuffix>person_pin</mat-icon>
+          <mat-icon matSuffix *ngIf="middleName?.valid && middleName?.touched" class="valid-icon">check_circle</mat-icon>
+          <mat-error *ngIf="middleName?.invalid && (middleName?.touched || showFormErrors)">
+            {{ getMiddleNameErrors() }}
+          </mat-error>
+          <mat-hint>Необязательное поле</mat-hint>
+        </mat-form-field>
+
+        <!-- Email -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email *</mat-label>
+          <input matInput formControlName="email" placeholder="example&#64;mail.ru" type="email">
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-icon matSuffix *ngIf="email?.valid && email?.touched" class="valid-icon">check_circle</mat-icon>
+          <mat-error *ngIf="email?.invalid && (email?.touched || showFormErrors)">
+            {{ getEmailErrors() }}
+          </mat-error>
+          <mat-hint>Например: example&#64;mail.ru</mat-hint>
+        </mat-form-field>
+
+        <!-- Пароль -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Пароль *</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" 
+                 formControlName="password" placeholder="Введите пароль">
+          <button mat-icon-button matSuffix type="button"
+                  (click)="togglePasswordVisibility()"
+                  [attr.aria-label]="'Hide password'" 
+                  [attr.aria-pressed]="hidePassword">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-icon matSuffix *ngIf="password?.valid && password?.touched" class="valid-icon">check_circle</mat-icon>
+          <mat-error *ngIf="password?.invalid && (password?.touched || showFormErrors)">
+            {{ getPasswordErrors() }}
+          </mat-error>
+          <mat-hint>Минимум 6 символов, цифры и буквы</mat-hint>
+        </mat-form-field>
+
+        <!-- Индикатор загрузки -->
+        <div *ngIf="isLoading" class="loading-indicator">
+          <mat-progress-spinner diameter="24" mode="indeterminate"></mat-progress-spinner>
+          <span>Регистрация...</span>
+        </div>
+
+        <!-- Кнопка отправки -->
+        <button mat-raised-button color="primary" type="submit" 
+                class="full-width submit-button"
+                [disabled]="isLoading">
+          <mat-icon>person_add</mat-icon>
+          {{ isLoading ? 'Регистрация...' : 'Зарегистрироваться' }}
+        </button>
+
+      </form>
+    </mat-card-content>
+
+    <!-- Блок с переходом на вход -->
+    <mat-card-actions class="auth-actions">
+      <div class="auth-divider">
+        <span>Уже есть аккаунт?</span>
+      </div>
+      <button mat-stroked-button color="accent" 
+              class="full-width signin-button"
+              (click)="goToSignIn()"
+              [disabled]="isLoading">
+        <mat-icon>login</mat-icon>
+        Войти в аккаунт
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

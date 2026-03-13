@@ -1,0 +1,180 @@
+<div
+  class="profile-container"
+  *ngIf="userService.isAuthenticated(); else loading"
+>
+  <mat-card class="profile-card">
+    <!-- Заголовок карточки -->
+    <mat-card-header class="profile-header">
+      <div class="avatar-section">
+        <div class="avatar-circle">
+          <img
+            *ngIf="userService.hasPhoto()"
+            [src]="userService.getCurrentUserPhotoUrl()"
+            alt="Фото профиля"
+            class="avatar-image"
+            (error)="onPhotoError($event)"
+          />
+          <span *ngIf="!userService.hasPhoto()" class="avatar-initials">
+            {{ userService.getInitials() }}
+          </span>
+        </div>
+      </div>
+      <mat-card-title class="profile-title">
+        {{ userService.getFullName() }}
+      </mat-card-title>
+      <mat-card-subtitle class="profile-subtitle">
+        {{ userService.getFieldValue("email") }}
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <!-- Контент карточки -->
+    <mat-card-content class="profile-content">
+      <div class="info-section">
+        <!-- Основная информация -->
+        <div class="info-group">
+          <h3 class="info-group-title">
+            <mat-icon>person</mat-icon>
+            Основная информация
+          </h3>
+          <div class="info-item">
+            <span class="info-label">Фамилия:</span>
+            <span class="info-value">{{
+              userService.getFieldValue("lastName", "Не указана")
+            }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Имя:</span>
+            <span class="info-value">{{
+              userService.getFieldValue("firstName", "Не указано")
+            }}</span>
+          </div>
+          <div
+            class="info-item"
+            *ngIf="userService.getCurrentUser()?.middleName"
+          >
+            <span class="info-label">Отчество:</span>
+            <span class="info-value">{{
+              userService.getFieldValue("middleName")
+            }}</span>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Контактная информация -->
+        <div class="info-group">
+          <h3 class="info-group-title">
+            <mat-icon>email</mat-icon>
+            Контактная информация
+          </h3>
+          <div class="info-item">
+            <span class="info-label">Email:</span>
+            <span class="info-value">{{
+              userService.getFieldValue("email")
+            }}</span>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Дата рождения -->
+        <div class="info-group" *ngIf="userService.getCurrentUser()?.birthDate">
+          <h3 class="info-group-title">
+            <mat-icon>cake</mat-icon>
+            Дата рождения
+          </h3>
+          <div class="info-item">
+            <span class="info-value">{{
+              userService.getFormattedDate(
+                userService.getCurrentUser()?.birthDate
+              )
+            }}</span>
+          </div>
+        </div>
+
+        <mat-divider
+          *ngIf="userService.getCurrentUser()?.birthDate"
+        ></mat-divider>
+
+        <!-- Статус и роль -->
+        <div
+          class="info-group"
+          *ngIf="
+            userService.getCurrentUser()?.status ||
+            userService.getCurrentUser()?.role
+          "
+        >
+          <h3 class="info-group-title">
+            <mat-icon>badge</mat-icon>
+            Статус и роль
+          </h3>
+          <div class="chips-container">
+            <mat-chip
+              *ngIf="userService.getCurrentUser()?.status"
+              
+              highlighted
+            >
+              {{ userService.getStatusText() }}
+            </mat-chip>
+            <mat-chip
+              *ngIf="userService.getCurrentUser()?.role"
+              color="accent"
+              highlighted
+            >
+              {{ userService.getRoleText() }}
+            </mat-chip>
+          </div>
+        </div>
+
+        <mat-divider
+          *ngIf="
+            userService.getCurrentUser()?.status ||
+            userService.getCurrentUser()?.role
+          "
+        ></mat-divider>
+      </div>
+    </mat-card-content>
+
+    <!-- Действия -->
+    <mat-card-actions align="end">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="editProfile()"
+        style="margin-right: 8px"
+      >
+        <mat-icon>edit</mat-icon>
+        Редактировать
+      </button>
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="authService.deleteAccount()"
+        style="margin-right: 8px"
+      >
+        <mat-icon>delete</mat-icon>
+        Удалить аккаунт
+      </button>
+      <button
+        mat-raised-button
+        color="accent"
+        (click)="goHome()"
+        style="margin-right: 8px"
+      >
+        <mat-icon>home</mat-icon>
+        На главную
+      </button>
+      <button mat-raised-button color="warn" (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Выйти
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<ng-template #loading>
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Загрузка профиля...</p>
+  </div>
+</ng-template>

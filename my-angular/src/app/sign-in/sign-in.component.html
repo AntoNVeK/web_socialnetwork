@@ -1,0 +1,59 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>Вход в аккаунт</mat-card-title>
+      <mat-card-subtitle>Введите email и пароль</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Email -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" placeholder="example@mail.ru" type="email">
+          <mat-icon matSuffix>email</mat-icon>
+          <mat-error *ngIf="signInForm.get('email')?.hasError('required')">
+            Email обязателен
+          </mat-error>
+          <mat-error *ngIf="signInForm.get('email')?.hasError('email')">
+            Введите корректный email
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Пароль -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Пароль</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" 
+                 formControlName="password" placeholder="Введите пароль">
+          <button mat-icon-button matSuffix type="button"
+                  (click)="togglePasswordVisibility()">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="signInForm.get('password')?.hasError('required')">
+            Пароль обязателен
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" 
+                class="full-width submit-button"
+                [disabled]="!signInForm.valid">
+          Войти
+        </button>
+
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions class="auth-actions">
+      <div class="auth-divider">
+        <span>Нет аккаунта?</span>
+      </div>
+      <button mat-stroked-button color="accent" 
+              class="full-width signup-button"
+              (click)="goToSignUp()">
+        <mat-icon>person_add</mat-icon>
+        Зарегистрироваться
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

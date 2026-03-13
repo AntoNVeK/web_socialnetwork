@@ -1,0 +1,27 @@
+<div class="users-container" *ngIf="users.length; else loading">
+  <div class="users-header">
+    <h2>Список пользователей</h2>
+    <button mat-raised-button color="accent" (click)="goToHome()">
+      <mat-icon>home</mat-icon>
+      На главную
+    </button>
+  </div>
+
+  <div class="users-grid">
+    <app-user-card
+      *ngFor="let user of users"
+      [user]="user"
+      [currentUserId]="currentUserId"
+      [isFriend]="isFriend(user.id)"
+      mode="users"
+      (addFriend)="onAddFriend($event)"
+    ></app-user-card>
+  </div>
+</div>
+
+<ng-template #loading>
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Загрузка пользователей...</p>
+  </div>
+</ng-template>

@@ -1,0 +1,47 @@
+<div class="news-container" style="max-width: 800px; margin: 0 auto; padding: 16px;">
+  <h2>Новости</h2>
+
+  <form [formGroup]="newsForm" (ngSubmit)="createNews()" class="news-form" style="display: flex; flex-direction: column; gap: 16px;">
+    <mat-form-field appearance="fill">
+      <mat-label>Заголовок</mat-label>
+      <input matInput placeholder="Заголовок" formControlName="title" />
+      <mat-error *ngIf="newsForm.get('title')?.hasError('maxlength')">Максимум 100 символов</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Содержимое новости</mat-label>
+      <textarea matInput placeholder="Содержимое новости" formControlName="content" rows="4"></textarea>
+      <mat-error *ngIf="newsForm.get('content')?.hasError('maxlength')">Максимум 1000 символов</mat-error>
+    </mat-form-field>
+
+    <div style="display: flex; gap: 16px;">
+      <button mat-raised-button color="primary" type="submit" [disabled]="newsForm.invalid">Создать новость</button>
+      <button mat-raised-button color="accent" type="button" (click)="goToMain()">На главную</button>
+    </div>
+  </form>
+
+  <mat-divider></mat-divider>
+
+  <div *ngIf="news.length === 0" style="margin-top: 16px;">Нет новостей</div>
+
+  <mat-card *ngFor="let item of news" class="news-item" style="margin-top: 16px; position: relative;">
+    <mat-card-title>{{ item.title }}</mat-card-title>
+    <mat-card-content>
+      <p>{{ item.content }}</p>
+    </mat-card-content>
+    <mat-card-footer>
+      <small>{{ item.date | date:'dd.MM.yyyy HH:mm' }}</small>
+    </mat-card-footer>
+
+    <!-- Кнопка удаления только для своих новостей -->
+    <button
+      *ngIf="item.id.startsWith('n' + currentUserId + '_')"
+      mat-icon-button
+      color="warn"
+      (click)="deleteNews(item.id)"
+      style="position: absolute; top: 8px; right: 8px;"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </mat-card>
+</div>

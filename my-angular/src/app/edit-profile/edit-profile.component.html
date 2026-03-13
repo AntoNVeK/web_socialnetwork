@@ -1,0 +1,172 @@
+<div class="edit-profile-container">
+  <mat-card class="edit-profile-card">
+    <mat-card-header>
+      <mat-card-title>Редактирование профиля</mat-card-title>
+      <mat-card-subtitle>Обновите ваши личные данные</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="edit-form">
+        
+        <!-- Загрузка фото -->
+        <div class="photo-section">
+          <div class="photo-preview">
+            <div class="avatar-circle large">
+              <img 
+                *ngIf="imagePreview" 
+                [src]="imagePreview"
+                alt="Превью фото"
+                class="avatar-image">
+              <div *ngIf="!imagePreview" class="avatar-placeholder">
+                <mat-icon>person</mat-icon>
+              </div>
+            </div>
+          </div>
+          
+          <div class="photo-actions">
+            <input 
+              type="file" 
+              id="fileInput"
+              (change)="onFileSelected($event)"
+              accept="image/*"
+              style="display: none;">
+            
+            <button 
+              type="button" 
+              mat-raised-button 
+              color="primary"
+              (click)="triggerFileInput()">
+              <mat-icon>cloud_upload</mat-icon>
+              {{ imagePreview ? 'Изменить фото' : 'Загрузить фото' }}
+            </button>
+            
+            <button 
+              *ngIf="imagePreview" 
+              type="button" 
+              mat-button 
+              color="warn"
+              (click)="removePhoto()">
+              <mat-icon>delete</mat-icon>
+              Удалить
+            </button>
+          </div>
+          
+          <div *ngIf="selectedFile" class="file-info success-message">
+            <mat-icon>check_circle</mat-icon>
+            <span>Выбран файл: {{ selectedFile.name }} ({{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB)</span>
+          </div>
+        </div>
+
+        <!-- Статус загрузки -->
+        <div *ngIf="loading" class="loading-status">
+          <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
+          <span>Сохранение данных...</span>
+        </div>
+
+        <!-- Имя -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Имя *</mat-label>
+            <input matInput formControlName="firstName" placeholder="Введите имя">
+            <mat-icon matSuffix *ngIf="firstName?.valid && firstName?.touched" class="valid-icon">check_circle</mat-icon>
+            <mat-error *ngIf="firstName?.invalid && (firstName?.touched || showFormErrors)">
+              {{ getFirstNameErrors() }}
+            </mat-error>
+            <mat-hint>Только буквы, пробелы и дефисы (2-50 символов)</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Фамилия -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Фамилия *</mat-label>
+            <input matInput formControlName="lastName" placeholder="Введите фамилию">
+            <mat-icon matSuffix *ngIf="lastName?.valid && lastName?.touched" class="valid-icon">check_circle</mat-icon>
+            <mat-error *ngIf="lastName?.invalid && (lastName?.touched || showFormErrors)">
+              {{ getLastNameErrors() }}
+            </mat-error>
+            <mat-hint>Только буквы, пробелы и дефисы (2-50 символов)</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Отчество -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Отчество</mat-label>
+            <input matInput formControlName="middleName" placeholder="Введите отчество">
+            <mat-icon matSuffix *ngIf="middleName?.valid && middleName?.touched" class="valid-icon">check_circle</mat-icon>
+            <mat-error *ngIf="middleName?.invalid && (middleName?.touched || showFormErrors)">
+              {{ getMiddleNameErrors() }}
+            </mat-error>
+            <mat-hint>Только буквы, пробелы и дефисы (необязательно)</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Email -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Email *</mat-label>
+            <input matInput formControlName="email" placeholder="Введите email" type="email">
+            <mat-icon matSuffix *ngIf="email?.valid && email?.touched" class="valid-icon">check_circle</mat-icon>
+            <mat-error *ngIf="email?.invalid && (email?.touched || showFormErrors)">
+              {{ getEmailErrors() }}
+            </mat-error>
+            <mat-hint>Например: example&#64;mail.ru</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Дата рождения -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Дата рождения</mat-label>
+            <input matInput formControlName="birthDate" placeholder="Выберите дату" type="date"
+                   [max]="getMaxBirthDate()" [min]="getMinBirthDate()">
+            <mat-icon matSuffix *ngIf="birthDate?.valid && birthDate?.touched" class="valid-icon">check_circle</mat-icon>
+            <mat-error *ngIf="birthDate?.invalid && (birthDate?.touched || showFormErrors)">
+              {{ getBirthDateErrors() }}
+            </mat-error>
+            <mat-hint>От 5 до 150 лет</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Общее сообщение об ошибках формы -->
+        <div *ngIf="showFormErrors && editForm.invalid" class="form-status error-message">
+          <mat-icon>error</mat-icon>
+          <span>Исправьте ошибки в форме перед сохранением</span>
+        </div>
+
+        <!-- Общая ошибка сервера -->
+        <div *ngIf="errorMessage" class="form-status error-message">
+          <mat-icon>error</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <!-- Кнопки -->
+        <mat-card-actions align="end" class="form-actions">
+          <div class="actions-left">
+            <!-- Новое поле для отображения информации -->
+            <div class="status-info" *ngIf="statusInfo">
+              <mat-icon>info</mat-icon>
+              <span>{{ statusInfo }}</span>
+            </div>
+          </div>
+          
+          <div class="actions-right">
+            <button mat-button type="button" (click)="onCancel()" [disabled]="loading">
+              <mat-icon>cancel</mat-icon>
+              Отмена
+            </button>
+            <button 
+              mat-raised-button 
+              color="primary" 
+              type="submit"
+              [disabled]="loading">
+              <mat-icon>{{ loading ? 'hourglass_empty' : 'save' }}</mat-icon>
+              {{ loading ? 'Сохранение...' : 'Сохранить изменения' }}
+            </button>
+          </div>
+        </mat-card-actions>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
